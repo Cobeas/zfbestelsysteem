@@ -1,21 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
+import { authMiddleware } from '../../../lib/middleware';
 import { prisma } from "../../../lib/prisma";
 
 export async function POST(request: NextRequest) {
-    const data = {
-        "dranken":[
-            {"bier":1},{"pitcher_bier":5},{"rosé_bier":1}
-        ],
-        "snacks":[
-            {"bitterballen":1}
-        ],
-        "barcount":2,
-        "tafelcount":10,
-        "barindeling":[
-            null,"1","1","1","1","1","2","2","2","2","2"
-        ]
+    const authResponse = authMiddleware(request);
+    
+    if (authResponse.status !== 200) {
+        return new NextResponse(null, { status: authResponse.status });
     }
-    const { dranken, snacks, barcount, barindeling } = data
+
+    const { dranken, snacks, barcount, barindeling } = await request.json();
     
     try {
         const result = await prisma.$executeRaw`

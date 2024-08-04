@@ -2,14 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "../../../lib/prisma";
 
 export async function POST(request: NextRequest) {
-    const data = {
-        tafelnummer: '1',
-        drank: { bier: '1' },
-        snacks: { bitterballen: '2' },
-        notities: "Geen mosterd"
-    }
 
-    const { tafelnummer, drank, snacks, notities } = data
+    const { tafelnummer, drank, snacks, notities } = await request.json();
 
     try {
 
