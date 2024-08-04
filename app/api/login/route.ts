@@ -9,6 +9,8 @@ export async function POST(request: Request) {
   const { password } = await request.json();
 
   const storedPasswordHash = process.env.HASHED;
+  console.log('Received password:', password);
+  console.log('Stored password hash:', storedPasswordHash);
 
   const isMatch = await bcrypt.compare(password, storedPasswordHash as string);
 
