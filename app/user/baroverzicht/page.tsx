@@ -2,6 +2,8 @@
 
 import fetchWithToken from "../../../app/lib/fetchWithToken";
 import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 type Order = {
     bestelling_id: number;
@@ -24,18 +26,29 @@ type TransformedOrder = {
 };
 
 export default function BarOverzicht() {
+  const router = useRouter();
   const [data, setData] = useState<Order[]>([]);
   const [barNr, setBarNr] = useState(1);
 
-    const getOrders = async () => {
-        try {
-            const response = await fetchWithToken('/api/orders/get');
-            const data = await response.json();
-            console.log('Orders:', data);
-            setData(data.message);
-        } catch (error) {
-            console.error('Error fetching orders:', error);
-        }
+  useEffect(() => {
+      const token = Cookies.get("zftoken");
+
+      if (!token) {
+      router.push("/auth/login");
+      return;
+      }
+
+  }, []);
+
+  const getOrders = async () => {
+      try {
+          const response = await fetchWithToken('/api/orders/get');
+          const data = await response.json();
+          console.log('Orders:', data);
+          setData(data.message);
+      } catch (error) {
+          console.error('Error fetching orders:', error);
+      }
     }
 
     function transformDrinks(orders: Order[]): TransformedOrder[] {
