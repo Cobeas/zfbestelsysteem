@@ -103,7 +103,7 @@ export default function KeukenOverzicht() {
         getOrders(); // Call immediately on mount
         const interval = setInterval(() => {
             getOrders();
-        }, 30000); // Elke 30 seconden
+        }, 5000); // Elke 5 seconden
 
         // Cleanup interval on component unmount
         return () => clearInterval(interval);
